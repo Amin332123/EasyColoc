@@ -3,7 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Models\User;
+use App\Models\Expense;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Payment>
  */
@@ -17,7 +18,9 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'expense_id' => Expense::factory(),
+            'user_id' => User::factory(),
+            'amount' => $this->faker->randomFloat(2, 10, 500),
         ];
     }
 }
