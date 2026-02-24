@@ -17,7 +17,8 @@ class ColocationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->city() . 'House',
+            'status' => $this->faker->randomElement(['active' , 'canceled' , 'active' , 'active']),
         ];
     }
 }
