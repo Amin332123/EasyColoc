@@ -11,7 +11,17 @@ class ColocationController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $ActiveMemberShip = $user->memberships()
+            ->whereHas('colocation', function ($query) {
+                $query->where('status', 'active');
+            })->first();
+        $userCollocation =  $ActiveMemberShip->colocation; 
+        $TotalExpenses = $ActiveMemberShip->colocation->Expenses()->sum('amount');
+        $individualExpenses = $TotalExpenses / $userCollocation->Memberships()->count();
+        $whatIpaid = $ActiveMemberShip->colocation->Expenses()->where('payer_id', auth()->id())->sum('amount');
+        $balance = $whatIpaid - $individualExpenses;
+        return view('collocation', compact('userCollocation', 'TotalExpenses', 'individualExpenses', 'balance'));
     }
 
     /**
@@ -27,7 +37,7 @@ class ColocationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
