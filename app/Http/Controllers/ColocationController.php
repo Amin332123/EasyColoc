@@ -16,12 +16,17 @@ class ColocationController extends Controller
             ->whereHas('colocation', function ($query) {
                 $query->where('status', 'active');
             })->first();
-        $userCollocation =  $ActiveMemberShip->colocation; 
+        if (!$ActiveMemberShip) {
+            return redirect()->route('dashboard')->with('error', 'You are not in an active house yet.');
+        }
+        $userCollocation = $ActiveMemberShip->colocation;
         $TotalExpenses = $ActiveMemberShip->colocation->Expenses()->sum('amount');
-        $individualExpenses = $TotalExpenses / $userCollocation->Memberships()->count();
+        $membersNumber = $userCollocation->Memberships()->count();
+        $individualExpenses = $TotalExpenses / $membersNumber;
         $whatIpaid = $ActiveMemberShip->colocation->Expenses()->where('payer_id', auth()->id())->sum('amount');
         $balance = $whatIpaid - $individualExpenses;
-        return view('collocation', compact('userCollocation', 'TotalExpenses', 'individualExpenses', 'balance'));
+        $expenses = $userCollocation->expenses()->with('user', 'categorie')->get();
+        return view('collocation', compact('userCollocation', 'TotalExpenses', 'individualExpenses', 'balance', 'membersNumber', 'expenses'));
     }
 
     /**
