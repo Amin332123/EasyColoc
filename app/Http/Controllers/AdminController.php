@@ -2,26 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Colocation;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class ColocationController extends Controller
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $user = auth()->user();
-        $ActiveMemberShip = $user->memberships()
-            ->whereHas('colocation', function ($query) {
-                $query->where('status', 'active');
-            })->first();
-        $userCollocation =  $ActiveMemberShip->colocation; 
-        $TotalExpenses = $ActiveMemberShip->colocation->Expenses()->sum('amount');
-        $individualExpenses = $TotalExpenses / $userCollocation->Memberships()->count();
-        $whatIpaid = $ActiveMemberShip->colocation->Expenses()->where('payer_id', auth()->id())->sum('amount');
-        $balance = $whatIpaid - $individualExpenses;
-        return view('collocation', compact('userCollocation', 'TotalExpenses', 'individualExpenses', 'balance'));
+        $users = User::all()->where('role_id', '!=' , 1);
+        $collocations = Colocation::count();
+        $activeColls = Colocation::where('status', 'active')->count();
+
+        return view('dashboard', compact('users', 'collocations', 'activeColls'));
     }
 
     /**
@@ -37,7 +33,7 @@ class ColocationController extends Controller
      */
     public function store(Request $request)
     {
-
+        //
     }
 
     /**
@@ -70,5 +66,22 @@ class ColocationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function banUser($userID)
+    {
+        $user = User::find($userID);
+        $user->is_banned = 1;
+        $user->save();
+
+        return redirect()->route('Admin.show');
+    }
+    public function UnbanUser($userID)
+    {
+        $user = User::find($userID);
+        $user->is_banned = 0;
+        $user->save();
+        return redirect()->route('Admin.show');
+
     }
 }
