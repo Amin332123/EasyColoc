@@ -549,6 +549,7 @@
     </div>
   </header>
 
+
   <main>
 
     <!-- ─── STATS ─── -->
@@ -560,18 +561,18 @@
       </div>
       <div class="stat-card">
         <div class="stat-card-label">Individual Expenses</div>
-        <div class="stat-card-value">{{ $individualExpenses }} $</div>
-        <div class="stat-card-sub">Your share (3 members)</div>
+        <div class="stat-card-value">{{ number_format($individualExpenses, 2) }} $</div>
+        <div class="stat-card-sub">Your share ({{ $membersNumber }} members)</div>
       </div>
       <div class="stat-card">
         <div class="stat-card-label">Balance</div>
         @if ($balance > 0)
-          <div class="stat-card-value" style="color:#2a9d6e;">{{ $balance }} $</div>
+          <div class="stat-card-value" style="color:#2a9d6e;">+{{ number_format($balance, 2)}} $</div>
         @elseif ($balance < 0)
-          <div class="stat-card-value" style="color:#ff0000;">{{ $balance }} $</div>
+          <div class="stat-card-value" style="color:#ff0000;">{{ number_format($balance, 2) }} $</div>
 
         @else
-          <div class="stat-card-value" style="color:#808080;">{{ $balance }} $</div>
+          <div class="stat-card-value" style="color:#808080;">{{ number_format($balance, 2) }} $</div>
 
         @endif
         <div class="stat-card-sub">You are owed money</div>
@@ -603,69 +604,29 @@
 
     <div class="expenses-list">
 
-      <div class="expense-card">
-        <div class="expense-icon">
-          <div class="expense-icon-inner"></div>
+      @foreach ($expenses as $expense)
+        <div class="expense-card">
+          <div class="expense-icon">
+            <div class="expense-icon-inner"></div>
+          </div>
+          <div class="expense-info">
+            <div class="expense-desc">{{ $expense->user->name }} paid {{ $expense->categorie->name }}</div>
+            <div class="expense-meta">{{ $expense->created_at }}</div>
+          </div>
+          <span class="badge-category"></span>
+          <div class="expense-amount">{{ $expense->amount }} $</div>
+          <div class="expense-actions">
+            @if ($expense->payer_id == auth()->id())
+              <button class="btn-mark">Mark as paid</button>
+              <button class="btn-delete">Delete</button>
+            @endif
+          </div>
         </div>
-        <div class="expense-info">
-          <div class="expense-desc">Amine bought groceries</div>
-          <div class="expense-meta">March 12, 2025</div>
-        </div>
-        <span class="badge-category">Food</span>
-        <div class="expense-amount">900 $</div>
-        <div class="expense-actions">
-          <button class="btn-mark">Mark as paid</button>
-          <button class="btn-delete">Delete</button>
-        </div>
-      </div>
 
-      <div class="expense-card">
-        <div class="expense-icon">
-          <div class="expense-icon-inner"></div>
-        </div>
-        <div class="expense-info">
-          <div class="expense-desc">Akram paid electricity bill</div>
-          <div class="expense-meta">March 8, 2025</div>
-        </div>
-        <span class="badge-category">Utilities</span>
-        <div class="expense-amount">360 $</div>
-        <div class="expense-actions">
-          <button class="btn-mark">Mark as paid</button>
-          <button class="btn-delete">Delete</button>
-        </div>
-      </div>
 
-      <div class="expense-card">
-        <div class="expense-icon">
-          <div class="expense-icon-inner"></div>
-        </div>
-        <div class="expense-info">
-          <div class="expense-desc">Sara paid internet subscription</div>
-          <div class="expense-meta">March 1, 2025</div>
-        </div>
-        <span class="badge-category">Utilities</span>
-        <span class="badge-paid">Paid</span>
-        <div class="expense-amount">120 $</div>
-        <div class="expense-actions">
-          <button class="btn-delete">Delete</button>
-        </div>
-      </div>
+      @endforeach
 
-      <div class="expense-card">
-        <div class="expense-icon">
-          <div class="expense-icon-inner"></div>
-        </div>
-        <div class="expense-info">
-          <div class="expense-desc">Amine bought cleaning supplies</div>
-          <div class="expense-meta">March 15, 2025</div>
-        </div>
-        <span class="badge-category">Household</span>
-        <div class="expense-amount">85 $</div>
-        <div class="expense-actions">
-          <button class="btn-mark">Mark as paid</button>
-          <button class="btn-delete">Delete</button>
-        </div>
-      </div>
+
 
     </div>
 
@@ -674,58 +635,84 @@
       <div class="section-title">What you owe</div>
     </div>
     <div class="debts-list">
-      <div class="debt-card">
-        <div class="debt-dot"></div>
-        <div class="debt-text">You should give <strong>Akram</strong> 200 $</div>
-        <button class="btn-pay">Pay</button>
-      </div>
-      <div class="debt-card">
-        <div class="debt-dot"></div>
-        <div class="debt-text">You should give <strong>Amine</strong> 300 $</div>
-        <button class="btn-pay">Pay</button>
-      </div>
-    </div>
+      @forelse($finalDebts as $debt)
+        <div class="debt-card">
+          <div class="debt-dot"></div>
 
+          <div class="debt-text">
+            @if($debt['from']->id === auth()->id())
+
+              You owe <strong>{{ $debt['to']->name }}</strong> {{ $debt['amount'] }} $
+            @else
+              {{-- Scenario: Someone else owes money --}}
+              <strong>{{ $debt['from']->name }}</strong> owes
+              <strong>{{ $debt['to']->name }}</strong> {{ $debt['amount'] }} $
+            @endif
+          </div>
+
+          @if($debt['from']->id === auth()->id())
+
+            <form action="" method="POST" style="margin: 0;">
+              @csrf
+              <input type="hidden" name="to_user_id" value="{{ $debt['to']->id }}">
+              <button type="submit" class="btn-pay">Pay</button>
+            </form>
+          @endif
+        </div>
+      @empty
+        <div class="debt-card">
+          <div class="debt-text">Everyone is square! No debts found. 🍻</div>
+        </div>
+      @endforelse
+    </div>
   </main>
 
-  <!-- ─── ADD EXPENSE MODAL ─── -->
-  <div class="modal-overlay" id="expenseModal">
-    <div class="modal">
-      <h2>Add an Expense</h2>
-      <p class="modal-sub">Log a shared expense for your colocation.</p>
-      <div class="form-group">
-        <label>Amount ($)</label>
-        <input type="number" placeholder="e.g. 120" min="0" />
-      </div>
-      <div class="form-group">
-        <label>Who paid?</label>
-        <select>
-          <option value="" disabled selected>Select a member</option>
-          <option>Amine</option>
-          <option>Akram</option>
-          <option>Sara</option>
-          <option>You</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Category</label>
-        <select>
-          <option value="" disabled selected>Select a category</option>
-          <option>Food</option>
-          <option>Utilities</option>
-          <option>Household</option>
-          <option>Internet</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-modal-cancel" onclick="closeModal('expenseModal')">Cancel</button>
-        <button class="btn-modal-submit">Add Expense</button>
+  <form action="{{ route('expense.store') }}" method="post">
+    @csrf
+    <div class="modal-overlay" id="expenseModal">
+      <div class="modal">
+        <h2>Add an Expense</h2>
+        <p class="modal-sub">Log a shared expense for your colocation.</p>
+
+        
+        <div class="form-group">
+          <label>Amount ($)</label>
+          <input type="number" name="amount" placeholder="e.g. 120" min="0" required />
+        </div>
+
+      
+        <div class="form-group">
+          <label>Who paid?</label>
+          <select name="payer" required>
+            <option value="" disabled selected>Select a member</option>
+            @foreach ($roommates as $roommate)
+              <!-- FIX: Add value="{{ $roommate->id }}" to send ID not name -->
+              <option value="{{ $roommate->id }}">{{ $roommate->name }}</option>
+            @endforeach
+          </select>
+        </div>
+
+       
+        <div class="form-group">
+          <label>Category</label>
+          <select name="category" required>
+            <option value="" disabled selected>Select a category</option>
+            @foreach ($categories as $category)
+             
+              <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-modal-cancel" type="button" onclick="closeModal('expenseModal')">Cancel</button>
+          <button type="submit" class="btn-modal-submit">Add Expense</button>
+        </div>
       </div>
     </div>
-  </div>
+  </form>
 
-  <!-- ─── CREATE CATEGORY MODAL ─── -->
+
   <div class="modal-overlay" id="categoryModal">
     <div class="modal">
       <h2>Create a Category</h2>

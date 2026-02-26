@@ -13,6 +13,7 @@ class AdminController extends Controller
      */
     public function index()
     {
+        
         $users = User::all()->where('role_id', '!=' , 1);
         $collocations = Colocation::count();
         $activeColls = Colocation::where('status', 'active')->count();
@@ -74,14 +75,14 @@ class AdminController extends Controller
         $user->is_banned = 1;
         $user->save();
 
-        return redirect()->route('Admin.show');
+        return redirect()->route('dashboard');
     }
     public function UnbanUser($userID)
     {
         $user = User::find($userID);
         $user->is_banned = 0;
         $user->save();
-        return redirect()->route('Admin.show');
+        return redirect()->route('dashboard');
 
     }
 }

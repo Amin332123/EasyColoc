@@ -15,8 +15,6 @@ class Payment extends Model
         'user_id',
         'amount'
     ];
-
-
     public function Expense()
     {
         return $this->belongsTo(Expense::class);

@@ -538,6 +538,34 @@
       </div>
     </div>
   </header>
+  @if(session('error'))
+    <div style="text-align: center; width: 100%; margin-bottom: 20px;">
+      <div
+        style="background: #fee2e2; color: #b91c1c; padding: 6px 16px; border-radius: 6px; border: 1px solid #fecaca; font-size: 0.85rem; display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <svg style="width: 14px; height: 14px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        {{ session('error') }}
+      </div>
+    </div>
+
+  @elseif ($errors->any())
+    <div style="text-align: center; width: 100%; margin-bottom: 20px;">
+      <div
+        style="background: #fee2e2; color: #b91c1c; padding: 6px 16px; border-radius: 6px; border: 1px solid #fecaca; font-size: 0.85rem; display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <svg style="width: 14px; height: 14px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        @foreach ($errors->all() as $error)
+          {{ $error }}
+
+        @endforeach
+      </div>
+    </div>
+
+  @endif
 
   <main>
 
@@ -663,19 +691,21 @@
   </main>
 
   <!-- ─── JOIN MODAL ─── -->
-  <div class="modal-overlay" id="joinModal">
-    <div class="modal">
-      <h2>Join a Colocation</h2>
-      <p>Enter the invitation token you received to join an existing colocation.</p>
-      <label for="tokenInput">Token number</label>
-      <input type="text" id="tokenInput" placeholder="e.g. TK-4892" />
-      <div class="modal-actions">
-        <button class="btn-modal-cancel" onclick="closeModal('joinModal')">Cancel</button>
-        <button class="btn-modal-submit">Submit</button>
+  <form action="{{ route('collocation.join') }}" method="post">
+    @csrf
+    <div class="modal-overlay" id="joinModal">
+      <div class="modal">
+        <h2>Join a Colocation</h2>
+        <p>Enter the invitation token you received to join an existing colocation.</p>
+        <label for="tokenInput">Token number</label>
+        <input type="text" id="tokenInput" name="token" placeholder="e.g. TK-4892" />
+        <div class="modal-actions">
+          <button class="btn-modal-cancel" onclick="closeModal('joinModal')">Cancel</button>
+          <button class="btn-modal-submit">Submit</button>
+        </div>
       </div>
     </div>
-  </div>
-
+  </form>
   <!-- ─── CREATE MODAL ─── -->
   <form action="{{ route('collocation.store') }}" method="post">
     @csrf
@@ -684,7 +714,7 @@
         <h2>Create a Colocation</h2>
         <p>Give your colocation a name to get started.</p>
         <label for="colocName">Colocation name</label>
-        <input type="text" id="colocName" placeholder="e.g. Coloc Maarif" />
+        <input type="text" id="colocName" name="name" placeholder="e.g. Coloc Maarif" />
         <div class="modal-actions">
           <button class="btn-modal-cancel" onclick="closeModal('createModal')">Cancel</button>
           <button type="submit" class="btn-modal-submit">Create</button>

@@ -36,6 +36,12 @@ class Expense extends Model
     {
         return $this->hasMany(Payment::class);
     }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'payments')
+            ->withPivot('amount', 'status')
+            ->withTimestamps();
+    }
 
 
 

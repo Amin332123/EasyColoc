@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -31,3 +32,10 @@ Route::post('/collocation', [ColocationController::class , 'store'])->name('coll
 
 
 Route::get('/collocation' , [ColocationController::class , 'index'])->name('collocation.show');
+
+
+Route::post('/collocation/store', [ColocationController::class, 'store'])->name('collocation.store');
+
+Route::post('/collocation/join', [ColocationController::class , 'join'])->name('collocation.join');
+
+Route::post('/expense/store', [ExpenseController::class, 'store'])->name('expense.store');

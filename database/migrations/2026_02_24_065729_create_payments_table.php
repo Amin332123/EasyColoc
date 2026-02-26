@@ -13,8 +13,9 @@ return new class extends Migration {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('expense_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained(); 
-            $table->float('amount', 2);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->decimal('amount', 10, 2);
+            $table->enum('status', ['paid', 'unpaid'])->default('unpaid');
             $table->timestamps();
         });
     }
