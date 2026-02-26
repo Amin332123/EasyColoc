@@ -38,15 +38,23 @@ class ColocationSeeder extends Seeder
 
 
             $Expenses = Expense::where('colocation_id', $house->id)->get();
-            foreach ($Expenses as $Expense) {
-
-               Payment::factory(2)->create([
-                'expense_id' => $Expense->id,
-                'user_id' => $roommates->random()->id,
-                'amount' => $Expense->amount / 2
-               ]);
+            foreach ($Expenses as $expense) {
+                $share = $expense->amount / $roommates->count();
+                foreach ($roommates as $roommate) {
+                    Payment::create([
+                        'expense_id' => $expense->id,
+                        'user_id' => $roommate->id,
+                        'amount' => $share,
+                        'status' => ($roommate->id == $expense->payer_id) ? 'paid' : 'unpaid',
+                    ]);
+                }
             }
         });
+
+
+
+
+
 
 
 

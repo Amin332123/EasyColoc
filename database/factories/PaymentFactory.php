@@ -18,9 +18,7 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
-            'expense_id' => Expense::factory(),
-            'user_id' => User::factory(),
-            'amount' => $this->faker->randomFloat(2, 10, 500),
+            'status' => fake()->randomElement(['paid', 'unpaid']),
         ];
     }
 }

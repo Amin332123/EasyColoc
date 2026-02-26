@@ -26,4 +26,12 @@ class JoinColocationRequest extends FormRequest
             'token' => 'required|string|exists:colocations,token',
         ];
     }
+
+
+    public function messages(): array
+    {
+        return [
+            'token.exists' => 'the token given is not valid ',
+        ];
+    }
 }
