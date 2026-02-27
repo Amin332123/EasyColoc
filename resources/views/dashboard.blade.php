@@ -650,42 +650,38 @@
       <div class="section-header" style="margin-bottom:24px;">
         <div class="section-title">Pending Invitations</div>
       </div>
+      @foreach ($invitations as $invitation )
+      
+     
       <div class="inv-card">
         <div class="inv-info">
-          <strong>Coloc Maarif – Casablanca</strong>
-          <span>Sent to sara@example.com · 2 days ago</span>
+          <strong>{{ $invitation->colocation->name }}</strong>
+          <span>Sent by {{ $invitation->sender->name }} · {{ $invitation->created_at }}</span>
         </div>
+
         <div style="display:flex;align-items:center;gap:16px;">
-          <span class="inv-token">TK-4892</span>
-          <div class="inv-actions">
-            <button class="btn-sm-danger">Revoke</button>
+          
+
+          <div class="inv-actions" style="display:flex; gap:8px;">
+            <form action="{{ route('invitation.accept', $invitation->id ) }}" method="POST">
+              @csrf 
+              <input type="hidden" name="token" value="{{ $invitation->colocation->token }}">
+              <button type="submit" class="btn-sm-success"
+                style="background:#10b981; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:600;">
+                Accept
+              </button>
+            </form>
+
+            <form action="{{ route('invitation.decline', $invitation->id ) }}" method="POST">
+              @csrf
+              <button type="submit" class="btn-sm-danger">
+                Decline
+              </button>
+            </form>
           </div>
         </div>
       </div>
-      <div class="inv-card">
-        <div class="inv-info">
-          <strong>Coloc Agdal – Rabat</strong>
-          <span>Sent to youssef@example.com · 5 days ago</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:16px;">
-          <span class="inv-token">TK-2231</span>
-          <div class="inv-actions">
-            <button class="btn-sm-danger">Revoke</button>
-          </div>
-        </div>
-      </div>
-      <div class="inv-card">
-        <div class="inv-info">
-          <strong>Coloc Guéliz – Marrakech</strong>
-          <span>Sent to layla@example.com · 1 week ago</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:16px;">
-          <span class="inv-token">TK-7714</span>
-          <div class="inv-actions">
-            <button class="btn-sm-danger">Revoke</button>
-          </div>
-        </div>
-      </div>
+      @endforeach
     </div>
 
   </main>

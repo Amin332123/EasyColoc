@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -60,5 +61,25 @@ class PaymentController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+
+    public function settle($id)
+    {
+        $user = auth()->user();
+
+
+        Payment::where('user_id', $user->id)->whereHas('expense', function ($q) use ($id) {
+            $q->where('payer_id', $id);
+        })->update(['status' => 'paid']);
+
+
+
+        return redirect()->route('collocation.show');
+
+
+
+
     }
 }

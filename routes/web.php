@@ -4,10 +4,12 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ColocationController;
+use App\Http\Controllers\PaymentController;
 Route::get('/', [HomeController::class , 'index']);
 
 Route::get('/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -39,3 +41,23 @@ Route::post('/collocation/store', [ColocationController::class, 'store'])->name(
 Route::post('/collocation/join', [ColocationController::class , 'join'])->name('collocation.join');
 
 Route::post('/expense/store', [ExpenseController::class, 'store'])->name('expense.store');
+
+
+
+Route::post('/payments/{id}', [PaymentController::class, 'settle'])->name('payments.settle');
+
+
+
+Route::post('/sendInvitation',  [InvitationController::class, 'send'])->name('invitation.send');
+
+
+
+Route::post('/acceptInvitation/{id}' , [InvitationController::class , 'accept'])->name('invitation.accept');
+
+
+
+Route::post('/declineInvitation/{id}' , [InvitationController::class , 'decline'])->name('invitation.decline');
+
+
+
+

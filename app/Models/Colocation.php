@@ -28,4 +28,10 @@ class Colocation extends Model
      public function Expenses() {
         return $this->hasMany(Expense::class);
     }
+
+
+
+    public function invitations() {
+        return $this->hasMany(invitation::class);
+    }
 }
