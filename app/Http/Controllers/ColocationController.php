@@ -14,7 +14,7 @@ class ColocationController extends Controller
     public function index()
     {
 
-        
+
         $user = auth()->user();
         $ActiveMemberShip = $user->memberships()
             ->whereHas('colocation', function ($query) {
@@ -27,15 +27,30 @@ class ColocationController extends Controller
         $TotalExpenses = $ActiveMemberShip->colocation->Expenses()->sum('amount');
         $membersNumber = $userCollocation->Memberships()->count();
         $individualExpenses = $TotalExpenses / $membersNumber;
-        $whatIpaid = $ActiveMemberShip->colocation->Expenses()->where('payer_id', auth()->id())->sum('amount');
-        $balance = $whatIpaid - $individualExpenses;
+
         $expenses = $userCollocation->expenses()->with('user', 'categorie')->get();
 
-       
+        
+        $moneyIWillReceive = Payment::whereHas('expense', function ($q) {
+            $q->where('payer_id', auth()->id());
+        })
+            ->where('user_id', '!=', auth()->id())
+            ->where('status', 'unpaid')
+            ->sum('amount');
 
+      
+        $moneyIWillGive = Payment::where('user_id', auth()->id())
+            ->where('status', 'unpaid')
+            ->whereHas('expense', function ($q) {
+                $q->where('payer_id', '!=', auth()->id());
+            })
+            ->sum('amount');
+
+
+        $balance = $moneyIWillReceive - $moneyIWillGive;
         $roommates = $userCollocation->memberships()->with('user')->get()->pluck('user');
         $categories = $userCollocation->categories()->get();
-      
+
         $finalDebts = [];
         $processedPairs = [];
 
@@ -94,7 +109,7 @@ class ColocationController extends Controller
             $q->where('status', 'active');
         })->first();
 
-        if($checkifJoining) {
+        if ($checkifJoining) {
             return redirect()->route('dashboard')->with('error', 'You are already joied in  a colocation');
         }
 
@@ -146,15 +161,18 @@ class ColocationController extends Controller
     }
 
 
-    public function join(JoinColocationRequest $request) {
+    public function join(JoinColocationRequest $request)
+    {
         $user = auth()->user();
-        $colocation = Colocation::where('token',$request->token)->first();
-        
-        $checkIfIsJoined = $user->Memberships()->where('user_id', $user->id)->whereHas('colocation' , function ($q) {
+        $colocation = Colocation::where('token', $request->token)->first();
+
+        $checkIfIsJoined = $user->Memberships()->where('user_id', $user->id)->whereHas('colocation', function ($q) {
             $q->where('status', 'active');
         })->exists();
 
-        if ($checkIfIsJoined) {  return redirect()->route('dashboard')->with('error', 'You are already joied in  a colocation');     }
+        if ($checkIfIsJoined) {
+            return redirect()->route('dashboard')->with('error', 'You are already joied in  a colocation');
+        }
 
 
         Membership::create([
@@ -167,5 +185,5 @@ class ColocationController extends Controller
 
     }
 
-    
+
 }

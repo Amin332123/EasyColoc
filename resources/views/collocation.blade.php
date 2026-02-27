@@ -551,7 +551,10 @@
 
 
   <main>
+    <h2>{{ $userCollocation->name }}</h2>
 
+
+    
     <!-- ─── STATS ─── -->
     <div class="stats-row">
       <div class="stat-card">
@@ -652,9 +655,8 @@
 
           @if($debt['from']->id === auth()->id())
 
-            <form action="" method="POST" style="margin: 0;">
+            <form action="{{ route('payments.settle', $debt['to']->id) }}" method="POST" style="margin: 0;">
               @csrf
-              <input type="hidden" name="to_user_id" value="{{ $debt['to']->id }}">
               <button type="submit" class="btn-pay">Pay</button>
             </form>
           @endif
@@ -674,13 +676,13 @@
         <h2>Add an Expense</h2>
         <p class="modal-sub">Log a shared expense for your colocation.</p>
 
-        
+
         <div class="form-group">
           <label>Amount ($)</label>
           <input type="number" name="amount" placeholder="e.g. 120" min="0" required />
         </div>
 
-      
+
         <div class="form-group">
           <label>Who paid?</label>
           <select name="payer" required>
@@ -692,13 +694,13 @@
           </select>
         </div>
 
-       
+
         <div class="form-group">
           <label>Category</label>
           <select name="category" required>
             <option value="" disabled selected>Select a category</option>
             @foreach ($categories as $category)
-             
+
               <option value="{{ $category->id }}">{{ $category->name }}</option>
             @endforeach
           </select>
@@ -727,6 +729,7 @@
       </div>
     </div>
   </div>
+  <h3> give this token in invitation :  {{ $userCollocation->token }}</h3>
 
   <script>
     function openModal(id) { document.getElementById(id).classList.add('open'); }

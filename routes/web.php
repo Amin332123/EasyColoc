@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ColocationController;
+use App\Http\Controllers\PaymentController;
 Route::get('/', [HomeController::class , 'index']);
 
 Route::get('/dashboard', [AdminController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -39,3 +40,7 @@ Route::post('/collocation/store', [ColocationController::class, 'store'])->name(
 Route::post('/collocation/join', [ColocationController::class , 'join'])->name('collocation.join');
 
 Route::post('/expense/store', [ExpenseController::class, 'store'])->name('expense.store');
+
+
+
+Route::post('/payments/{id}', [PaymentController::class, 'settle'])->name('payments.settle');
