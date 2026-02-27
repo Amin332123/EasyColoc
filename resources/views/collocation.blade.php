@@ -520,6 +520,101 @@
         align-items: flex-start;
       }
     }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      /* Script toggles between none and flex */
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      margin: 1rem 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+
+    .btn-leave {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 22px;
+      border-radius: 9px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.90rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid #f5c0c3;
+      background: #fdecea;
+      color: #e63946;
+      box-shadow: 0 2px 10px rgba(230, 57, 70, 0.10);
+      width: 29%;
+    }
+
+    .btn-leave:hover {
+      background: #fbd7d8;
+      border-color: #e63946;
+      box-shadow: 0 4px 16px rgba(230, 57, 70, 0.18);
+    }
+
+    .btn-leave-icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .btn-leave-icon::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 2px;
+      background: #e63946;
+      border-radius: 2px;
+    }
+
+    .btn-leave-icon::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%) rotate(45deg);
+      width: 7px;
+      height: 7px;
+      border-top: 2px solid #e63946;
+      border-right: 2px solid #e63946;
+      border-radius: 1px;
+      margin-top: -1px;
+    }
   </style>
 </head>
 
@@ -530,14 +625,17 @@
       <div>
         <a href="admin.html" class="logo">Easy Coloc</a>
       </div>
-      <div style="text-align:center;">
-        <div class="header-title">Coloc Maarif</div>
-        <div class="breadcrumb"><a href="admin.html">Dashboard</a> / Coloc Maarif</div>
-      </div>
+
       <div class="header-btns">
         <a href="{{ route('dashboard') }}" class="btn-outline">Dashboard</a>
         <button class="btn-outline" onclick="openModal('categoryModal')">Create Category</button>
         <button class="btn-filled" onclick="openModal('expenseModal')">Add Expense</button>
+        <form action="{{ route('collocation.leave', auth()->id()) }}">
+          <button type="submit" class="btn-leave">
+            <span class="btn-leave-icon"></span>
+            Leave Colocation
+          </button>
+        </form>
         <form method="POST" action="{{ route('logout') }}" class="inline">
           @csrf
           <button type="submit"
@@ -552,9 +650,30 @@
 
   <main>
     <h2>{{ $userCollocation->name }}</h2>
+    @if ($ActiveMemberShip->role == 'owner')
+      <button onclick="toggleModal()" class="btn-invite">+ Invite Roommate</button>
+    @endif
+    <div id="inviteModal" class="modal-backdrop" style="display: none;">
+      <div class="modal-content">
+        <h3>Invite Roommate</h3>
+        <p>Enter the email of the person you want to invite.</p>
+
+        <form action="{{ route('invitation.send') }}" method="POST">
+          @csrf
+          <div class="form-group">
+            <input type="email" name="email" placeholder="roommate@email.com" required>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" onclick="toggleModal()" class="btn-cancel">Cancel</button>
+            <button type="submit" class="btn-submit">Send Invitation</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
 
-    
+
     <!-- ─── STATS ─── -->
     <div class="stats-row">
       <div class="stat-card">
@@ -715,6 +834,9 @@
   </form>
 
 
+
+
+
   <div class="modal-overlay" id="categoryModal">
     <div class="modal">
       <h2>Create a Category</h2>
@@ -729,7 +851,7 @@
       </div>
     </div>
   </div>
-  <h3> give this token in invitation :  {{ $userCollocation->token }}</h3>
+  <h3> give this token in invitation : {{ $userCollocation->token }}</h3>
 
   <script>
     function openModal(id) { document.getElementById(id).classList.add('open'); }
@@ -737,6 +859,27 @@
     document.querySelectorAll('.modal-overlay').forEach(m => {
       m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
     });
+
+
+
+
+
+    function toggleModal() {
+      const modal = document.getElementById('inviteModal');
+      if (modal.style.display === 'none') {
+        modal.style.display = 'flex';
+      } else {
+        modal.style.display = 'none';
+      }
+    }
+
+
+    window.onclick = function (event) {
+      const modal = document.getElementById('inviteModal');
+      if (event.target == modal) {
+        toggleModal();
+      }
+    }
   </script>
 </body>
 

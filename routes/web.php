@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
@@ -44,3 +45,19 @@ Route::post('/expense/store', [ExpenseController::class, 'store'])->name('expens
 
 
 Route::post('/payments/{id}', [PaymentController::class, 'settle'])->name('payments.settle');
+
+
+
+Route::post('/sendInvitation',  [InvitationController::class, 'send'])->name('invitation.send');
+
+
+
+Route::post('/acceptInvitation/{id}' , [InvitationController::class , 'accept'])->name('invitation.accept');
+
+
+
+Route::post('/declineInvitation/{id}' , [InvitationController::class , 'decline'])->name('invitation.decline');
+
+
+
+
