@@ -18,15 +18,14 @@ class AdminController extends Controller
         $users = User::all()->where('role_id', '!=', 1);
         $collocations = Colocation::count();
         $activeColls = Colocation::where('status', 'active')->count();
-
-
-       
         $invitations = Invitation::where('user_id', auth()->id())
             ->with('sender', 'colocation') 
             ->where('status', 'pending')
             ->get();
 
-        return view('dashboard', compact('users', 'collocations', 'activeColls', 'invitations'));
+        $AuthUser = User::where('id', auth()->id())->first();
+
+        return view('dashboard', compact('users', 'collocations', 'activeColls', 'invitations', 'AuthUser'));
     }
 
     /**
