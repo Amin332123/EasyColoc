@@ -28,24 +28,36 @@ class User extends Authenticatable
     ];
 
 
-    public function Memberships() {
+    public function Memberships()
+    {
         return $this->hasMany(Membership::class);
     }
 
-    public Function Role() {
+    public function Role()
+    {
         return $this->belongsTo(Role::class);
     }
 
-    public function Expenses() {
+    public function Expenses()
+    {
         return $this->hasMany(Expense::class);
     }
 
 
-    public function invitations() {
+    public function invitations()
+    {
         return $this->hasMany(invitation::class);
     }
 
-    
+    public function payments()
+    {
+      
+        return $this->belongsToMany(Expense::class, 'payments')
+            ->withPivot('amount', 'status')
+            ->withTimestamps();
+    }
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

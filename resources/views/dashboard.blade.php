@@ -697,7 +697,7 @@
         <input type="text" id="tokenInput" name="token" placeholder="e.g. TK-4892" />
         <div class="modal-actions">
           <button class="btn-modal-cancel" onclick="closeModal('joinModal')">Cancel</button>
-          <button class="btn-modal-submit">Submit</button>
+          <button type="submit" class="btn-modal-submit">Submit</button>
         </div>
       </div>
     </div>
