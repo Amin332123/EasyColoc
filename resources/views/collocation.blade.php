@@ -629,6 +629,7 @@
       <div class="header-btns">
         <a href="{{ route('dashboard') }}" class="btn-outline">Dashboard</a>
         <button class="btn-outline" onclick="openModal('categoryModal')">Create Category</button>
+        <button class="btn-outline" onclick="openModal('manageCategoriesModal')">Show Categories</button>
         <button class="btn-filled" onclick="openModal('expenseModal')">Add Expense</button>
         <form action="{{ route('collocation.leave', auth()->id()) }}" method="post">
           @csrf
@@ -842,16 +843,43 @@
     <div class="modal">
       <h2>Create a Category</h2>
       <p class="modal-sub">Add a new expense category for your colocation.</p>
-      <div class="form-group">
-        <label>Category name</label>
-        <input type="text" placeholder="e.g. Rent, Groceries..." />
+      <form action="{{ route('category.store') }}" method="POST">
+        @csrf
+        <div class="form-group">
+          <label>Category name</label>
+          <input type="text" name="name" placeholder="e.g. Rent, Groceries..." required />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-modal-cancel" type="button" onclick="closeModal('categoryModal')">Cancel</button>
+          <button class="btn-modal-submit" type="submit">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- manage categories modal -->
+  <div class="modal-overlay" id="manageCategoriesModal">
+    <div class="modal">
+      <h2>Manage Categories</h2>
+      <p class="modal-sub">You can remove categories by clicking the × button.</p>
+      <div class="form-group" style="display: flex; flex-wrap: wrap; gap:8px;">
+        @foreach($categories as $cat)
+          <span style="background:#edf6f9;padding:4px 8px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;">
+            {{ $cat->name }}
+            <form action="{{ route('category.destroy', $cat->id) }}" method="POST" style="display:inline;">
+              @csrf
+              @method('DELETE')
+              <button type="submit" style="background:none;border:none;color:#e63946;font-weight:bold;cursor:pointer;">&times;</button>
+            </form>
+          </span>
+        @endforeach
       </div>
       <div class="modal-actions">
-        <button class="btn-modal-cancel" onclick="closeModal('categoryModal')">Cancel</button>
-        <button class="btn-modal-submit">Create</button>
+        <button class="btn-modal-cancel" onclick="closeModal('manageCategoriesModal')">Close</button>
       </div>
     </div>
   </div>
+
   <h3> give this token in invitation : {{ $userCollocation->token }}</h3>
 
   <script>

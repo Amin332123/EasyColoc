@@ -40,5 +40,8 @@ Route::middleware(['auth', 'in_house'])->group(function () {
     Route::post('/payments/{id}', [PaymentController::class, 'settle'])->name('payments.settle');
     Route::post('/sendInvitation', [InvitationController::class, 'send'])->name('invitation.send');
     Route::post('/leave/colocation/{id}', [ColocationController::class, 'leave'])->name('collocation.leave');
+    // category management
+    Route::post('/category/store', [ColocationController::class, 'storeCategory'])->name('category.store');
+    Route::delete('/category/{id}', [ColocationController::class, 'destroyCategory'])->name('category.destroy');
 });
 

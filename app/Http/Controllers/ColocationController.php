@@ -8,6 +8,7 @@ use App\Models\Colocation;
 use App\Models\Membership;
 use App\Models\Payment;
 use App\Models\User;
+use App\Models\Categorie;
 use Carbon\Traits\Timestamp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -235,6 +236,46 @@ class ColocationController extends Controller
         }
 
         return redirect()->route('dashboard')->with('success', 'You have left the colocation.');
+    }
+
+    // ----- category helpers -----
+    public function storeCategory(Request $request)
+    {
+        $request->validate(['name' => 'required|string|max:255']);
+
+        $user = auth()->user();
+        $membership = $user->memberships()
+            ->whereNull('left_at')
+            ->whereHas('colocation', fn($q) => $q->where('status', 'active'))
+            ->first();
+
+        if (!$membership) {
+            return redirect()->back()->with('error', 'Not in a colocation');
+        }
+
+        Categorie::create([
+            'name' => $request->name,
+            'colocation_id' => $membership->colocation_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Category created');
+    }
+
+    public function destroyCategory($id)
+    {
+        $user = auth()->user();
+        $membership = $user->memberships()
+            ->whereNull('left_at')
+            ->whereHas('colocation', fn($q) => $q->where('status', 'active'))
+            ->first();
+
+        $category = Categorie::findOrFail($id);
+        if (!$membership || $category->colocation_id !== $membership->colocation_id) {
+            abort(403);
+        }
+
+        $category->delete();
+        return redirect()->back()->with('success', 'Category removed');
     }
 
 
