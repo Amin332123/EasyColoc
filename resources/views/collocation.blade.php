@@ -573,7 +573,7 @@
       background: #fdecea;
       color: #e63946;
       box-shadow: 0 2px 10px rgba(230, 57, 70, 0.10);
-      width: 29%;
+      
     }
 
     .btn-leave:hover {
@@ -630,7 +630,8 @@
         <a href="{{ route('dashboard') }}" class="btn-outline">Dashboard</a>
         <button class="btn-outline" onclick="openModal('categoryModal')">Create Category</button>
         <button class="btn-filled" onclick="openModal('expenseModal')">Add Expense</button>
-        <form action="{{ route('collocation.leave', auth()->id()) }}">
+        <form action="{{ route('collocation.leave', auth()->id()) }}" method="post">
+          @csrf
           <button type="submit" class="btn-leave">
             <span class="btn-leave-icon"></span>
             Leave Colocation
