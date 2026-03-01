@@ -140,6 +140,7 @@
 
     /* ─── STAT CARDS ─── */
     .stats-row {
+
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
@@ -147,6 +148,7 @@
     }
 
     .stat-card {
+      margin-top: 80px;
       background: var(--white);
       border-radius: 14px;
       padding: 28px 24px;
@@ -509,6 +511,71 @@
         display: none;
       }
     }
+
+    .user-profile-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 20px 28px;
+      box-shadow: 0 4px 18px rgba(0, 109, 119, 0.09);
+    }
+
+    .user-profile-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #edf6f9;
+      color: #006d77;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .user-profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .user-profile-name {
+      font-weight: 600;
+      font-size: 0.97rem;
+      color: #1a2e31;
+    }
+
+    .user-profile-email {
+      font-size: 0.83rem;
+      color: #5a7c80;
+    }
+
+    .user-profile-rep {
+      margin-left: 12px;
+      padding-left: 20px;
+      border-left: 1.5px solid #cce6ea;
+      text-align: center;
+    }
+
+    .user-profile-rep-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem;
+      color: #006d77;
+      line-height: 1;
+    }
+
+    .user-profile-rep-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #83c5be;
+      margin-top: 4px;
+    }
   </style>
 </head>
 
@@ -569,118 +636,137 @@
 
   <main>
 
+
     <!-- ─── DASHBOARD TAB ─── -->
+
+
     <div id="dashboard">
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-card-label">Total Users</div>
-          <div class="stat-card-value">{{ $users->count() }}</div>
-          <div class="stat-card-sub">+34 this month</div>
+      <div class="user-profile-card">
+        <div class="user-profile-avatar"><img
+            src="https://ui-avatars.com/api/?background=random&name={{ $AuthUser->name }}" alt=""></div>
+        <div class="user-profile-info">
+          <div class="user-profile-name">{{ $AuthUser->name }}</div>
+          <div class="user-profile-email">{{ $AuthUser->email }}</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-card-label">Total Colocations</div>
-          <div class="stat-card-value">{{ $collocations }}</div>
-          <div class="stat-card-sub">Across 14 cities</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-label">Active Colocations</div>
-          <div class="stat-card-value">{{ $activeColls }}</div>
-          <div class="stat-card-sub">69.9% of total</div>
+        <div class="user-profile-rep">
+          <div class="user-profile-rep-value">{{ $AuthUser->reputation_score }}</div>
+          <div class="user-profile-rep-label">Reputation</div>
         </div>
       </div>
-
-      <div class="section-header">
-        <div class="section-title">All Users</div>
-        <input class="search-input" type="text" placeholder="Search by name..." oninput="filterUsers(this.value)" />
-      </div>
-
-      <div class="users-list" id="usersList">
-        @foreach ($users as $user)
-
-          <div class="user-card">
-            <div class="user-avatar">
-              <img class="avatar" src="https://ui-avatars.com/api/?background=random&name={{ $user->name }}" alt="">
+      @if (auth()->id() == 1)
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-card-label">Total Users</div>
+              <div class="stat-card-value">{{ $users->count() }}</div>
+              <div class="stat-card-sub">+34 this month</div>
             </div>
-            <div class="user-info">
-              <div class="user-name">{{ $user->name }}</div>
-              <div class="user-email">{{ $user->email }}</div>
+            <div class="stat-card">
+              <div class="stat-card-label">Total Colocations</div>
+              <div class="stat-card-value">{{ $collocations }}</div>
+              <div class="stat-card-sub">Across 14 cities</div>
             </div>
-            <div class="user-rep">
-              <span class="rep-label">Reputation</span>
-              <span class="rep-value">{{ $user->reputation_score }}</span>
-            </div>
-
-            <div class="user-actions">
-
-              @if(!$user->is_banned)
-
-                <form action="{{ route('banUser', $user->id) }}" method="post">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="btn-ban">Ban</button>
-
-                </form>
-
-              @else
-                <form action="{{  route('UnbanUser', $user->id) }}" method="post">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="btn-unban">Unban</button>
-
-                </form>
-              @endif
-
-
-
-
+            <div class="stat-card">
+              <div class="stat-card-label">Active Colocations</div>
+              <div class="stat-card-value">{{ $activeColls }}</div>
+              <div class="stat-card-sub">69.9% of total</div>
             </div>
           </div>
 
-        @endforeach
+          <div class="section-header">
+            <div class="section-title">All Users</div>
+            <input class="search-input" type="text" placeholder="Search by name..." oninput="filterUsers(this.value)" />
+          </div>
+
+          <div class="users-list" id="usersList">
+            @foreach ($users as $user)
+
+              <div class="user-card">
+                <div class="user-avatar">
+                  <img class="avatar" src="https://ui-avatars.com/api/?background=random&name={{ $user->name }}" alt="">
+                </div>
+                <div class="user-info">
+                  <div class="user-name">{{ $user->name }}</div>
+                  <div class="user-email">{{ $user->email }}</div>
+                </div>
+                <div class="user-rep">
+                  <span class="rep-label">Reputation</span>
+                  <span class="rep-value">{{ $user->reputation_score }}</span>
+                </div>
+
+                <div class="user-actions">
+
+                  @if(!$user->is_banned)
+
+                    <form action="{{ route('banUser', $user->id) }}" method="post">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn-ban">Ban</button>
+
+                    </form>
+
+                  @else
+                    <form action="{{  route('UnbanUser', $user->id) }}" method="post">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn-unban">Unban</button>
+
+                    </form>
+                  @endif
+
+
+
+
+                </div>
+              </div>
+
+            @endforeach
 
 
 
 
 
-      </div>
-    </div>
+          </div>
+        </div>
+
+      @endif
+
 
     <!-- ─── INVITATIONS TAB ─── -->
     <div id="invitations" class="invitations-section">
       <div class="section-header" style="margin-bottom:24px;">
         <div class="section-title">Pending Invitations</div>
       </div>
-      @foreach ($invitations as $invitation )
-      
-     
-      <div class="inv-card">
-        <div class="inv-info">
-          <strong>{{ $invitation->colocation->name }}</strong>
-          <span>Sent by {{ $invitation->sender->name }} · {{ $invitation->created_at }}</span>
-        </div>
+      @foreach ($invitations as $invitation)
 
-        <div style="display:flex;align-items:center;gap:16px;">
-          
 
-          <div class="inv-actions" style="display:flex; gap:8px;">
-            <form action="{{ route('invitation.accept', $invitation->id ) }}" method="POST">
-              @csrf 
-              <input type="hidden" name="token" value="{{ $invitation->colocation->token }}">
-              <button type="submit" class="btn-sm-success"
-                style="background:#10b981; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:600;">
-                Accept
-              </button>
-            </form>
+        <div class="inv-card">
+          <div class="inv-info">
+            <strong>{{ $invitation->colocation->name }}</strong>
+            <span>Sent by {{ $invitation->sender->name }} · {{ $invitation->created_at }}</span>
+          </div>
 
-            <form action="{{ route('invitation.decline', $invitation->id ) }}" method="POST">
-              @csrf
-              <button type="submit" class="btn-sm-danger">
-                Decline
-              </button>
-            </form>
+          <div style="display:flex;align-items:center;gap:16px;">
+
+
+            <div class="inv-actions" style="display:flex; gap:8px;">
+              <form action="{{ route('invitation.accept', $invitation->id) }}" method="POST">
+                @csrf
+                <input type="hidden" name="token" value="{{ $invitation->colocation->token }}">
+                <button type="submit" class="btn-sm-success"
+                  style="background:#10b981; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:600;">
+                  Accept
+                </button>
+              </form>
+
+              <form action="{{ route('invitation.decline', $invitation->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn-sm-danger">
+                  Decline
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
       @endforeach
     </div>
 

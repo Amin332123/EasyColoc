@@ -18,51 +18,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/collocation/store', [ColocationController::class, 'store'])->name('collocation.store');
+    Route::post('/collocation/join', [ColocationController::class, 'join'])->name('collocation.join');
+    Route::post('/acceptInvitation/{id}', [InvitationController::class, 'accept'])->name('invitation.accept');
+    Route::post('/declineInvitation/{id}', [InvitationController::class, 'decline'])->name('invitation.decline');
 });
 require __DIR__ . '/auth.php';
 
-
-
-// Route::get('/Dashboard', [AdminController::class , 'index'])->name('dashboard.show');
 Route::get('/signup', [RegisteredUserController::class, 'create'])->name('signup');
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::delete('/banuser/{userId}', [AdminController::class, 'banUser'])->name('banUser');
+    Route::delete('/Unbanuser/{userId}', [AdminController::class, 'UnbanUser'])->name('UnbanUser');
 
-Route::delete('/banuser/{userId}', [AdminController::class, 'banUser'])->name('banUser');
-Route::delete('/Unbanuser/{userId}', [AdminController::class, 'UnbanUser'])->name('UnbanUser');
-Route::post('/collocation', [ColocationController::class, 'store'])->name('collocation.store');
+});
 
-
-Route::get('/collocation', [ColocationController::class, 'index'])->name('collocation.show');
-
-
-Route::post('/collocation/store', [ColocationController::class, 'store'])->name('collocation.store');
-
-Route::post('/collocation/join', [ColocationController::class, 'join'])->name('collocation.join');
-
-Route::post('/expense/store', [ExpenseController::class, 'store'])->name('expense.store');
-
-
-
-Route::post('/payments/{id}', [PaymentController::class, 'settle'])->name('payments.settle');
-
-
-
-Route::post('/sendInvitation', [InvitationController::class, 'send'])->name('invitation.send');
-
-
-
-Route::post('/acceptInvitation/{id}', [InvitationController::class, 'accept'])->name('invitation.accept');
-
-
-
-Route::post('/declineInvitation/{id}', [InvitationController::class, 'decline'])->name('invitation.decline');
-
-
-Route::post('/leave/colocation/{id}', [ColocationController::class, 'leave'])->name('collocation.leave');
-
-
-
-
-
+Route::middleware(['auth', 'in_house'])->group(function () {
+    Route::get('/collocation', [ColocationController::class, 'index'])->name('collocation.show');
+    Route::post('/expense/store', [ExpenseController::class, 'store'])->name('expense.store');
+    Route::post('/payments/{id}', [PaymentController::class, 'settle'])->name('payments.settle');
+    Route::post('/sendInvitation', [InvitationController::class, 'send'])->name('invitation.send');
+    Route::post('/leave/colocation/{id}', [ColocationController::class, 'leave'])->name('collocation.leave');
+});
 
