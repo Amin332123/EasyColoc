@@ -51,10 +51,38 @@ class User extends Authenticatable
 
     public function payments()
     {
-      
+
         return $this->belongsToMany(Expense::class, 'payments')
             ->withPivot('amount', 'status')
             ->withTimestamps();
+    }
+
+
+
+
+
+
+
+    public function getBalance()
+    {
+        // Use $this->id to refer to the specific user instance
+        $userId = $this->id;
+
+        $moneyIWillReceive = Payment::whereHas('expense', function ($q) use ($userId) {
+            $q->where('payer_id', $userId);
+        })
+            ->where('user_id', '!=', $userId)
+            ->where('status', 'unpaid')
+            ->sum('amount');
+
+        $moneyIWillGive = Payment::where('user_id', $userId)
+            ->where('status', 'unpaid')
+            ->whereHas('expense', function ($q) use ($userId) {
+                $q->where('payer_id', '!=', $userId);
+            })
+            ->sum('amount');
+
+        return $moneyIWillReceive - $moneyIWillGive;
     }
 
 

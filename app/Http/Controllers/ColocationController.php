@@ -44,24 +44,7 @@ class ColocationController extends Controller
 
         $expenses = $userCollocation->expenses()->with('user', 'categorie')->get();
 
-
-        $moneyIWillReceive = Payment::whereHas('expense', function ($q) {
-            $q->where('payer_id', auth()->id());
-        })
-            ->where('user_id', '!=', auth()->id())
-            ->where('status', 'unpaid')
-            ->sum('amount');
-
-
-        $moneyIWillGive = Payment::where('user_id', auth()->id())
-            ->where('status', 'unpaid')
-            ->whereHas('expense', function ($q) {
-                $q->where('payer_id', '!=', auth()->id());
-            })
-            ->sum('amount');
-
-
-        $balance = $moneyIWillReceive - $moneyIWillGive;
+        $balance = $user->getBalance();
         $roommates = $userCollocation->memberships()->with('user')->get()->pluck('user');
         $categories = $userCollocation->categories()->get();
 
@@ -243,6 +226,13 @@ class ColocationController extends Controller
         $ActiveMembership->update([
             'left_at' => now()->format('Y-m-d H:i:s'),
         ]);
+        $balance = $user->getBalance();
+
+        if ($balance >= 0) {
+            $user->increment('reputation_score');
+        } else {
+            $user->decrement('reputation_score');
+        }
 
         return redirect()->route('dashboard')->with('success', 'You have left the colocation.');
     }
