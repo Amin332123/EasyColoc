@@ -96,6 +96,7 @@
     .header-actions {
       display: flex;
       gap: 10px;
+      align-items: center;
     }
 
     .btn-outline {
@@ -108,6 +109,8 @@
       color: var(--teal-dark);
       border: 1.5px solid var(--teal-mid);
       font-family: inherit;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .btn-outline:hover {
@@ -140,7 +143,6 @@
 
     /* ─── STAT CARDS ─── */
     .stats-row {
-
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
@@ -212,7 +214,7 @@
       box-shadow: 0 0 0 3px rgba(0, 109, 119, 0.08);
     }
 
-    /* ─── USER CARDS ─── */
+    /* ─── USER CARDS (list) ─── */
     .users-list {
       display: flex;
       flex-direction: column;
@@ -233,14 +235,16 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: var(--teal-light);
-      color: var(--teal-dark);
-      font-weight: 700;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      overflow: hidden;
       flex-shrink: 0;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 50%;
     }
 
     .user-info {
@@ -490,16 +494,146 @@
       cursor: pointer;
     }
 
-    .avatar {
-      max-width: 100%;
-      height: auto;
-      border-radius: 20px;
-
-
-    }
-
     .btn-modal-cancel:hover {
       background: #d9eef3;
+    }
+
+    /* ─── USER PROFILE CARD – BASE ─── */
+    .user-profile-card {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0, 109, 119, 0.10);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 24px 32px;
+      margin-bottom: 32px;
+    }
+
+    .user-profile-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px rgba(0, 109, 119, 0.15);
+    }
+
+    .user-profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .user-profile-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .user-profile-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: #1a2e31;
+    }
+
+    .user-profile-email {
+      font-size: 0.83rem;
+      color: #5a7c80;
+    }
+
+    .user-profile-rep {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-left: 24px;
+      border-left: 1.5px solid #cce6ea;
+      min-width: 80px;
+    }
+
+    .user-profile-rep-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      color: #006d77;
+      line-height: 1;
+    }
+
+    .user-profile-rep-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #83c5be;
+      margin-top: 5px;
+    }
+
+    /* ─── ADMIN: compact, stays small at the top ─── */
+    .card--admin {
+      max-width: 460px;
+      padding: 20px 28px;
+    }
+
+    .card--admin .user-profile-avatar {
+      width: 46px;
+      height: 46px;
+    }
+
+    .card--admin .user-profile-name {
+      font-size: 1rem;
+    }
+
+    .card--admin .user-profile-rep-value {
+      font-size: 1.5rem;
+    }
+
+    /* ─── HERO: big, centered, vertical for normal users ─── */
+    .card--hero {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 420px;
+      margin: 80px auto 0;
+      padding: 52px 48px;
+      box-shadow: 0 8px 40px rgba(0, 109, 119, 0.13);
+    }
+
+    .card--hero .user-profile-avatar {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 18px rgba(0, 109, 119, 0.18);
+    }
+
+    .card--hero .user-profile-info {
+      align-items: center;
+    }
+
+    .card--hero .user-profile-name {
+      font-size: 1.7rem;
+    }
+
+    .card--hero .user-profile-email {
+      font-size: 0.9rem;
+    }
+
+    .card--hero .user-profile-rep {
+      border-left: none;
+      border-top: 1.5px solid #cce6ea;
+      padding-left: 0;
+      padding-top: 24px;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .card--hero .user-profile-rep-value {
+      font-size: 3rem;
+    }
+
+    .card--hero .user-profile-rep-label {
+      font-size: 0.78rem;
+      margin-top: 6px;
     }
 
     @media(max-width: 768px) {
@@ -511,71 +645,6 @@
         display: none;
       }
     }
-
-    .user-profile-card {
-      display: inline-flex;
-      align-items: center;
-      gap: 20px;
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 20px 28px;
-      box-shadow: 0 4px 18px rgba(0, 109, 119, 0.09);
-    }
-
-    .user-profile-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #edf6f9;
-      color: #006d77;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .user-profile-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .user-profile-name {
-      font-weight: 600;
-      font-size: 0.97rem;
-      color: #1a2e31;
-    }
-
-    .user-profile-email {
-      font-size: 0.83rem;
-      color: #5a7c80;
-    }
-
-    .user-profile-rep {
-      margin-left: 12px;
-      padding-left: 20px;
-      border-left: 1.5px solid #cce6ea;
-      text-align: center;
-    }
-
-    .user-profile-rep-value {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.6rem;
-      color: #006d77;
-      line-height: 1;
-    }
-
-    .user-profile-rep-label {
-      font-size: 0.76rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #83c5be;
-      margin-top: 4px;
-    }
   </style>
 </head>
 
@@ -586,7 +655,6 @@
       <a href="index.html" class="logo">Easy Coloc</a>
 
       <div class="tabs">
-
         <button class="tab active" onclick="showTab('dashboard', this)">Dashboard</button>
         <button class="tab" onclick="showTab('invitations', this)">Invitations</button>
       </div>
@@ -598,52 +666,46 @@
         <form method="POST" action="{{ route('logout') }}" class="inline">
           @csrf
           <button type="submit"
-            class="text-[10px] uppercase tracking-tighter text-gray-400 hover:text-red-500 transition-colors duration-200">
+            style="background:none; border:none; font-family:inherit; font-size:0.82rem; font-weight:600; color:var(--muted); cursor:pointer; padding:9px 4px;">
             {{ __('Logout') }}
           </button>
         </form>
       </div>
     </div>
   </header>
+
   @if(session('error'))
-    <div style="text-align: center; width: 100%; margin-bottom: 20px;">
-      <div
-        style="background: #fee2e2; color: #b91c1c; padding: 6px 16px; border-radius: 6px; border: 1px solid #fecaca; font-size: 0.85rem; display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <svg style="width: 14px; height: 14px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    <div style="text-align:center; width:100%; padding: 16px 32px 0;">
+      <div style="background:#fee2e2; color:#b91c1c; padding:8px 20px; border-radius:8px; border:1px solid #fecaca; font-size:0.85rem; display:inline-flex; align-items:center; gap:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+        <svg style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         {{ session('error') }}
       </div>
     </div>
-
   @elseif ($errors->any())
-    <div style="text-align: center; width: 100%; margin-bottom: 20px;">
-      <div
-        style="background: #fee2e2; color: #b91c1c; padding: 6px 16px; border-radius: 6px; border: 1px solid #fecaca; font-size: 0.85rem; display: inline-flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <svg style="width: 14px; height: 14px; margin-right: 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    <div style="text-align:center; width:100%; padding: 16px 32px 0;">
+      <div style="background:#fee2e2; color:#b91c1c; padding:8px 20px; border-radius:8px; border:1px solid #fecaca; font-size:0.85rem; display:inline-flex; align-items:center; gap:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+        <svg style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         @foreach ($errors->all() as $error)
           {{ $error }}
-
         @endforeach
       </div>
     </div>
-
   @endif
 
   <main>
 
-
     <!-- ─── DASHBOARD TAB ─── -->
-
-
     <div id="dashboard">
-      <div class="user-profile-card">
-        <div class="user-profile-avatar"><img
-            src="https://ui-avatars.com/api/?background=random&name={{ $AuthUser->name }}" alt=""></div>
+
+      {{-- Profile card: compact for admin, big hero for normal user --}}
+      <div class="user-profile-card {{ auth()->id() == 1 ? 'card--admin' : 'card--hero' }}">
+        <div class="user-profile-avatar">
+          <img src="https://ui-avatars.com/api/?background=random&name={{ $AuthUser->name }}" alt="{{ $AuthUser->name }}" />
+        </div>
         <div class="user-profile-info">
           <div class="user-profile-name">{{ $AuthUser->name }}</div>
           <div class="user-profile-email">{{ $AuthUser->email }}</div>
@@ -653,116 +715,93 @@
           <div class="user-profile-rep-label">Reputation</div>
         </div>
       </div>
+
+      {{-- Admin-only stats and user list --}}
       @if (auth()->id() == 1)
-          <div class="stats-row">
-            <div class="stat-card">
-              <div class="stat-card-label">Total Users</div>
-              <div class="stat-card-value">{{ $users->count() }}</div>
-              <div class="stat-card-sub">+34 this month</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-card-label">Total Colocations</div>
-              <div class="stat-card-value">{{ $collocations }}</div>
-              <div class="stat-card-sub">Across 14 cities</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-card-label">Active Colocations</div>
-              <div class="stat-card-value">{{ $activeColls }}</div>
-              <div class="stat-card-sub">69.9% of total</div>
-            </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card-label">Total Users</div>
+            <div class="stat-card-value">{{ $users->count() }}</div>
+            <div class="stat-card-sub">+34 this month</div>
           </div>
-
-          <div class="section-header">
-            <div class="section-title">All Users</div>
-            <input class="search-input" type="text" placeholder="Search by name..." oninput="filterUsers(this.value)" />
+          <div class="stat-card">
+            <div class="stat-card-label">Total Colocations</div>
+            <div class="stat-card-value">{{ $collocations }}</div>
+            <div class="stat-card-sub">Across 14 cities</div>
           </div>
-
-          <div class="users-list" id="usersList">
-            @foreach ($users as $user)
-
-              <div class="user-card">
-                <div class="user-avatar">
-                  <img class="avatar" src="https://ui-avatars.com/api/?background=random&name={{ $user->name }}" alt="">
-                </div>
-                <div class="user-info">
-                  <div class="user-name">{{ $user->name }}</div>
-                  <div class="user-email">{{ $user->email }}</div>
-                </div>
-                <div class="user-rep">
-                  <span class="rep-label">Reputation</span>
-                  <span class="rep-value">{{ $user->reputation_score }}</span>
-                </div>
-
-                <div class="user-actions">
-
-                  @if(!$user->is_banned)
-
-                    <form action="{{ route('banUser', $user->id) }}" method="post">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn-ban">Ban</button>
-
-                    </form>
-
-                  @else
-                    <form action="{{  route('UnbanUser', $user->id) }}" method="post">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn-unban">Unban</button>
-
-                    </form>
-                  @endif
-
-
-
-
-                </div>
-              </div>
-
-            @endforeach
-
-
-
-
-
+          <div class="stat-card">
+            <div class="stat-card-label">Active Colocations</div>
+            <div class="stat-card-value">{{ $activeColls }}</div>
+            <div class="stat-card-sub">69.9% of total</div>
           </div>
         </div>
 
+        <div class="section-header">
+          <div class="section-title">All Users</div>
+          <input class="search-input" type="text" placeholder="Search by name..." oninput="filterUsers(this.value)" />
+        </div>
+
+        <div class="users-list" id="usersList">
+          @foreach ($users as $user)
+            <div class="user-card" data-name="{{ strtolower($user->name) }}">
+              <div class="user-avatar">
+                <img class="avatar" src="https://ui-avatars.com/api/?background=random&name={{ $user->name }}" alt="{{ $user->name }}" />
+              </div>
+              <div class="user-info">
+                <div class="user-name">{{ $user->name }}</div>
+                <div class="user-email">{{ $user->email }}</div>
+              </div>
+              <div class="user-rep">
+                <span class="rep-label">Reputation</span>
+                <span class="rep-value">{{ $user->reputation_score }}</span>
+              </div>
+              <div class="user-actions">
+                @if(!$user->is_banned)
+                  <form action="{{ route('banUser', $user->id) }}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-ban">Ban</button>
+                  </form>
+                @else
+                  <form action="{{ route('UnbanUser', $user->id) }}" method="post">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-unban">Unban</button>
+                  </form>
+                @endif
+              </div>
+            </div>
+          @endforeach
+        </div>
       @endif
 
+    </div>
 
     <!-- ─── INVITATIONS TAB ─── -->
     <div id="invitations" class="invitations-section">
       <div class="section-header" style="margin-bottom:24px;">
         <div class="section-title">Pending Invitations</div>
       </div>
+
       @foreach ($invitations as $invitation)
-
-
         <div class="inv-card">
           <div class="inv-info">
             <strong>{{ $invitation->colocation->name }}</strong>
             <span>Sent by {{ $invitation->sender->name }} · {{ $invitation->created_at }}</span>
           </div>
-
           <div style="display:flex;align-items:center;gap:16px;">
-
-
-            <div class="inv-actions" style="display:flex; gap:8px;">
+            <div class="inv-actions">
               <form action="{{ route('invitation.accept', $invitation->id) }}" method="POST">
                 @csrf
                 <input type="hidden" name="token" value="{{ $invitation->colocation->token }}">
-                <button type="submit" class="btn-sm-success"
-                  style="background:#10b981; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-weight:600;">
+                <button type="submit"
+                  style="background:#006d77; color:white; border:none; padding:7px 16px; border-radius:7px; cursor:pointer; font-family:inherit; font-size:0.83rem; font-weight:600; box-shadow:0 2px 8px rgba(0,109,119,0.18);">
                   Accept
                 </button>
               </form>
-
               <form action="{{ route('invitation.decline', $invitation->id) }}" method="POST">
                 @csrf
-                <button type="submit" class="btn-sm-danger">
-                  Decline
-                </button>
+                <button type="submit" class="btn-sm-danger">Decline</button>
               </form>
             </div>
           </div>
@@ -782,12 +821,13 @@
         <label for="tokenInput">Token number</label>
         <input type="text" id="tokenInput" name="token" placeholder="e.g. TK-4892" />
         <div class="modal-actions">
-          <button class="btn-modal-cancel" onclick="closeModal('joinModal')">Cancel</button>
+          <button type="button" class="btn-modal-cancel" onclick="closeModal('joinModal')">Cancel</button>
           <button type="submit" class="btn-modal-submit">Submit</button>
         </div>
       </div>
     </div>
   </form>
+
   <!-- ─── CREATE MODAL ─── -->
   <form action="{{ route('collocation.store') }}" method="post">
     @csrf
@@ -798,26 +838,37 @@
         <label for="colocName">Colocation name</label>
         <input type="text" id="colocName" name="name" placeholder="e.g. Coloc Maarif" />
         <div class="modal-actions">
-          <button class="btn-modal-cancel" onclick="closeModal('createModal')">Cancel</button>
+          <button type="button" class="btn-modal-cancel" onclick="closeModal('createModal')">Cancel</button>
           <button type="submit" class="btn-modal-submit">Create</button>
         </div>
       </div>
     </div>
-
   </form>
-  <script>
 
+  <script>
     function openModal(id) { document.getElementById(id).classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
     function showTab(tab, btn) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('dashboard').style.display = tab === 'dashboard' ? 'block' : 'none';
-      const inv = document.getElementById('invitations');
-      inv.style.display = tab === 'invitations' ? 'block' : 'none';
+      document.getElementById('invitations').style.display = tab === 'invitations' ? 'block' : 'none';
     }
 
-  </script>
-</body>
+    function filterUsers(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll('#usersList .user-card').forEach(card => {
+        const name = card.getAttribute('data-name') || '';
+        card.style.display = name.includes(q) ? 'flex' : 'none';
+      });
+    }
 
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+      m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+    });
+  </script>
+
+</body>
 </html>

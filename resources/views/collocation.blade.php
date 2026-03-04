@@ -739,24 +739,13 @@
           </div>
           <span class="badge-category"></span>
           <div class="expense-amount">{{ $expense->amount }} $</div>
-          <div class="expense-actions">
-            @if ($expense->payer_id == auth()->id())
-              <button class="btn-mark">Mark as paid</button>
-              <button class="btn-delete">Delete</button>
-            @endif
-          </div>
         </div>
-
-
       @endforeach
-
-
-
     </div>
 
     <!-- ─── DEBTS ─── -->
     <div class="section-header">
-      <div class="section-title">What you owe</div>
+      <div class="section-title">who owes who</div>
     </div>
     <div class="debts-list">
       @forelse($finalDebts as $debt)
